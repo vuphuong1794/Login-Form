@@ -1,10 +1,10 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
+const app = express();
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-
-const app = express();
+const authRoute = require("./routes/auth");
 dotenv.config();
 
 const connect = async () => {
@@ -16,16 +16,14 @@ const connect = async () => {
   }
 };
 
-mongoose.connection.on("disconnected", () => {
-  console.log("MongoDB disconnected");
-});
-
-//middlewares
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
+//ROUTES
+app.use("/v1/auth", authRoute);
+
 app.listen(8000, () => {
   connect();
-  console.log("connected to back end");
+  console.log("Server is running");
 });
